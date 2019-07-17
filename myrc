@@ -1,0 +1,70 @@
+function _SET_COLORS
+{   
+    _GREEN='\[\e[0;32m\]'
+    _BLUE='\[\e[0;34m\]'
+    _CYAN='\[\e[0;36m\]'
+    _PURPLE='\[\e[0;35m\]'
+    _YELLOW='\[\e[0;33m\]'
+    _RED='\[\e[0;31m\]'
+    _NORMAL='\[\e[0m\]'
+}
+
+function _ALIASES
+{
+    alias ll="ls -ltrh"
+}
+
+function _GIT
+{
+#GIT_PS1_SHOWDIRTYSTATE
+#Shows the "dirty" indicator - meaning whether you modified tracked files. Can be * for unstaged changes, + for staged changes, # for "no HEAD to compare against" (usually only happens before initial commit)
+#GIT_PS1_SHOWSTASHSTATE
+#Shows the "stash" indicator - meaning whether you have files stashed.
+#Looks like $
+#GIT_PS1_SHOWUNTRACKEDFILES Shows the "untracked" indicator - meaning whether you have untracked files (files that are in the working directory but haven't been added using git add to the repository).
+#Looks like %
+#
+#GIT_PS1_SHOWUPSTREAM
+#Shows the difference between the upstream branch and the current branch. I only use "auto", meaning that I get the following values:
+#
+#    < when I'm behind (I need to pull to get changes from the server)
+#    > when I'm ahead (I need to push to update the server with my changes)
+#    <> when I'm diverged from the server (some conflict resolution will be required)
+#    = when we're identical (no action is needed).
+#
+#This obviously requires me to fetch the remote server from time to time.
+
+    _GIT_BRANCH=$(__git_ps1 "%s" 2>/dev/null)
+
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUPSTREAM=1
+    _GIT_NEED_ACTIONS=$(__git_ps1 "%s" 2>/dev/null)
+
+    if [ ! -z "${_GIT_BRANCH}" ]
+    then
+        case ${_GIT_BRANCH} in
+        "master"|"production")
+            echo -e " ${_RED}[${_GIT_BRANCH}]${_NORMAL}"
+            ;;
+        *)
+            if [ "${_GIT_BRANCH}=" == "${_GIT_NEED_ACTIONS}" ]
+            then
+                echo -e " ${_GREEN}[${_GIT_BRANCH}]${_NORMAL}"
+            else
+                echo -e " ${_YELLOW}[${_GIT_NEED_ACTIONS}]${_NORMAL}"
+            fi
+            ;;
+        esac
+    fi        
+}
+
+function _GENERATE_PS1
+{
+    PS1=$(echo -e "${_CYAN}[$(date +%H:%M:%S%z)]${_NORMAL}${_BLUE}[\u@\H ${_NORMAL}\w${_BLUE}]${_NORMAL}$(_GIT) \$ ")
+}
+
+_SET_COLORS
+_ALIASES
+PROMPT_COMMAND="_GENERATE_PS1"
