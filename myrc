@@ -14,6 +14,15 @@ function _ALIASES
     alias ll="ls -ltrh"
 }
 
+function _HISTORY
+{
+    export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S%z "
+    export HISTSIZE=10000
+    export HISTFILESIZE=10000
+    export HISTCONTROL=ignoreboth:erasedups
+    shopt -s histappend
+}
+
 function _GIT
 {
 #GIT_PS1_SHOWDIRTYSTATE
@@ -67,4 +76,6 @@ function _GENERATE_PS1
 
 _SET_COLORS
 _ALIASES
+_HISTORY
 PROMPT_COMMAND="_GENERATE_PS1"
+PROMPT_COMMAND="${PROMPT_COMMAND}; history -a"
