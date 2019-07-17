@@ -19,7 +19,7 @@ function _HISTORY
     export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S%z "
     export HISTSIZE=10000
     export HISTFILESIZE=10000
-    export HISTCONTROL=ignoreboth:erasedups
+    export HISTCONTROL=ignoredups:erasedups
     shopt -s histappend
 }
 
@@ -78,4 +78,4 @@ _SET_COLORS
 _ALIASES
 _HISTORY
 PROMPT_COMMAND="_GENERATE_PS1"
-PROMPT_COMMAND="${PROMPT_COMMAND}; history -a"
+PROMPT_COMMAND="${PROMPT_COMMAND}; history -a; history -c; history -r"
